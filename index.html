@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hệ sinh thái ONEBEE - Cổng Demo Tổng hợp</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg-dark: #030712;
+            --bg-panel: #0f172a;
+            --border-glass: rgba(255, 255, 255, 0.08);
+            --text-main: #f8fafc;
+            --text-sub: #94a3b8;
+            --primary: #3b82f6;
+            --accent-teal: #2dd4bf;
+            --accent-purple: #a855f7;
+            --accent-orange: #f97316;
+            --accent-green: #10b981;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            height: 100vh;
+            display: flex;
+            overflow: hidden;
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(59, 130, 246, 0.1), transparent 25%),
+                radial-gradient(circle at 85% 30%, rgba(168, 85, 247, 0.1), transparent 25%);
+        }
+
+        /* Sidebar Navigation */
+        .sidebar {
+            width: 320px;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-right: 1px solid var(--border-glass);
+            display: flex;
+            flex-direction: column;
+            z-index: 10;
+            box-shadow: 5px 0 25px rgba(0,0,0,0.5);
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-header {
+            padding: 30px 24px;
+            border-bottom: 1px solid var(--border-glass);
+            text-align: center;
+        }
+
+        .logo {
+            font-size: 36px;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary), var(--accent-teal));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -1px;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            font-size: 13px;
+            color: var(--text-sub);
+            font-family: 'Inter', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 500;
+        }
+
+        .nav-list {
+            flex: 1;
+            padding: 24px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            overflow-y: auto;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid transparent;
+            background: rgba(255, 255, 255, 0.02);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-item::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 4px; height: 100%;
+            background: var(--active-color, var(--primary));
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .nav-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            transform: translateX(4px);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-item.active {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: var(--border-glass);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        .nav-item.active::before {
+            opacity: 1;
+        }
+
+        .nav-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid var(--border-glass);
+            flex-shrink: 0;
+            box-shadow: inset 0 0 10px rgba(255,255,255,0.05);
+            transition: all 0.3s;
+        }
+
+        .nav-item.active .nav-icon {
+            background: var(--active-color, var(--primary));
+            border-color: transparent;
+            color: #fff;
+            box-shadow: 0 0 20px var(--active-color, var(--primary));
+        }
+
+        .nav-text {
+            flex: 1;
+        }
+
+        .nav-title {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 4px;
+            line-height: 1.3;
+        }
+
+        .nav-desc {
+            font-size: 12px;
+            color: var(--text-sub);
+            font-family: 'Inter', sans-serif;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        /* Specific Colors */
+        .item-da1 { --active-color: var(--accent-orange); }
+        .item-da2 { --active-color: var(--accent-purple); }
+        .item-da3 { --active-color: var(--primary); }
+        .item-da4 { --active-color: var(--accent-teal); }
+
+        .sidebar-footer {
+            padding: 24px;
+            border-top: 1px solid var(--border-glass);
+            text-align: center;
+            font-size: 12px;
+            color: var(--text-sub);
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            background: #000;
+        }
+
+        /* Home Screen */
+        .home-screen {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-dark);
+            z-index: 5;
+            transition: opacity 0.5s;
+            text-align: center;
+            padding: 40px;
+        }
+        
+        .home-screen.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .home-logo {
+            font-size: 80px;
+            margin-bottom: 24px;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .home-title {
+            font-size: 48px;
+            font-weight: 800;
+            margin-bottom: 16px;
+            background: linear-gradient(to right, #fff, var(--text-sub));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .home-desc {
+            font-size: 18px;
+            color: var(--text-sub);
+            max-width: 600px;
+            line-height: 1.6;
+            margin-bottom: 40px;
+        }
+
+        /* Loading Overlay */
+        .loader-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(3, 7, 18, 0.8);
+            backdrop-filter: blur(10px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 8;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+
+        .loader-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(255,255,255,0.1);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 16px;
+        }
+
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+
+        /* Iframe */
+        .demo-frame {
+            width: 100%;
+            height: 100%;
+            border: none;
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+
+        .demo-frame.loaded {
+            opacity: 1;
+        }
+
+        /* Top Bar for frame */
+        .frame-header {
+            height: 50px;
+            background: rgba(15, 23, 42, 0.9);
+            border-bottom: 1px solid var(--border-glass);
+            display: flex;
+            align-items: center;
+            padding: 0 24px;
+            justify-content: space-between;
+            position: absolute;
+            top: 0; left: 0; width: 100%;
+            z-index: 6;
+            transform: translateY(-100%);
+            transition: transform 0.3s;
+        }
+
+        .frame-header.visible {
+            transform: translateY(0);
+        }
+
+        .frame-title {
+            font-size: 14px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .frame-title span {
+            color: var(--text-sub);
+            font-weight: 400;
+        }
+
+        .device-toggles {
+            display: flex;
+            gap: 8px;
+        }
+
+        .device-btn {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--border-glass);
+            color: var(--text-sub);
+            width: 32px; height: 32px;
+            border-radius: 6px;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .device-btn:hover, .device-btn.active {
+            background: rgba(255,255,255,0.15);
+            color: #fff;
+        }
+
+        .iframe-wrapper {
+            width: 100%;
+            height: 100%;
+            padding-top: 0;
+            transition: all 0.3s;
+            margin: 0 auto;
+            background: #000;
+        }
+
+        .iframe-wrapper.has-header {
+            padding-top: 50px;
+        }
+
+        /* Mobile View Simulation */
+        .iframe-wrapper.mobile-view {
+            width: 390px;
+            height: 844px;
+            margin: auto;
+            margin-top: 60px;
+            border-radius: 40px;
+            border: 12px solid #1e293b;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+            overflow: hidden;
+            position: relative;
+        }
+        .iframe-wrapper.mobile-view::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 50%;
+            transform: translateX(-50%);
+            width: 120px; height: 25px;
+            background: #1e293b;
+            border-bottom-left-radius: 16px;
+            border-bottom-right-radius: 16px;
+            pointer-events: none;
+        }
+        .iframe-wrapper.mobile-view .demo-frame {
+            border-radius: 0;
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">ONEBEE</div>
+            <div class="subtitle">Ecosystem Showcase</div>
+        </div>
+
+        <div class="nav-list">
+            <!-- DA1 -->
+            <div class="nav-item item-da1" onclick="loadDemo('DA1', '../da1-tro-ly-tai-chinh-ai-bo-tui/demo/index.html')">
+                <div class="nav-icon">💰</div>
+                <div class="nav-text">
+                    <div class="nav-title">Trợ lý Tài chính AI</div>
+                    <div class="nav-desc">Tự động hóa bóc tách hóa đơn, biên lai qua Camera & Zalo Mini App.</div>
+                </div>
+            </div>
+
+            <!-- DA2 -->
+            <div class="nav-item item-da2" onclick="loadDemo('DA2', '../da2-mo-hinh-quan-tri-hien-dai-cung-ai/demo/index.html')">
+                <div class="nav-icon">🏢</div>
+                <div class="nav-text">
+                    <div class="nav-title">Mô hình Quản trị AI</div>
+                    <div class="nav-desc">Hệ thống ERP thu nhỏ kết hợp Automation (n8n) và AI Engineering.</div>
+                </div>
+            </div>
+
+            <!-- DA3 -->
+            <div class="nav-item item-da3" onclick="loadDemo('DA3', '../da3-he-dieu-hanh-va-tu-dong-hoa-open-source/demo/index.html')">
+                <div class="nav-icon">🐧</div>
+                <div class="nav-text">
+                    <div class="nav-title">OneBee OS</div>
+                    <div class="nav-desc">Hệ điều hành mã nguồn mở Linux tùy biến cho doanh nghiệp & nhà nước.</div>
+                </div>
+            </div>
+
+            <!-- DA4 -->
+            <div class="nav-item item-da4" onclick="loadDemo('DA4', '../da4-hermes-agent-cho-hanh-chinh-cong/demo/index.html')">
+                <div class="nav-icon">🏛️</div>
+                <div class="nav-text">
+                    <div class="nav-title">Hermes Agent</div>
+                    <div class="nav-desc">Trợ lý ảo xử lý nghiệp vụ hành chính công tự động bằng luồng Agentic.</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="sidebar-footer">
+            &copy; 2026 HTX Công nghệ OneBee.<br>Dự thi KNĐMST Tây Ninh 2026.
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        
+        <!-- Home Welcome Screen -->
+        <div class="home-screen" id="homeScreen">
+            <div class="home-logo">🐝</div>
+            <h1 class="home-title">Hệ Sinh Thái ONEBEE</h1>
+            <p class="home-desc">Khám phá 4 giải pháp công nghệ đột phá tham gia Hội thi Khởi nghiệp Đổi mới Sáng tạo tỉnh Tây Ninh 2026. Vui lòng chọn một dự án bên trái để trải nghiệm Demo tương tác.</p>
+            <div style="display:flex; gap: 16px;">
+                <div style="background: rgba(255,255,255,0.05); padding: 12px 24px; border-radius: 100px; border: 1px solid var(--border-glass);">
+                    🚀 Sẵn sàng triển khai
+                </div>
+                <div style="background: rgba(255,255,255,0.05); padding: 12px 24px; border-radius: 100px; border: 1px solid var(--border-glass);">
+                    🔒 Bảo mật dữ liệu Local
+                </div>
+            </div>
+        </div>
+
+        <!-- Frame Header -->
+        <div class="frame-header" id="frameHeader">
+            <div class="frame-title">
+                <span id="currentDaId" style="background: var(--primary); color: white; padding: 2px 8px; border-radius: 4px; font-weight: 700; margin-right: 8px;">DA1</span>
+                <div id="currentDaName">Tên Dự Án</div>
+            </div>
+            <div class="device-toggles">
+                <button class="device-btn active" id="btnDesktop" onclick="setView('desktop')" title="Desktop View">💻</button>
+                <button class="device-btn" id="btnMobile" onclick="setView('mobile')" title="Mobile View">📱</button>
+                <button class="device-btn" onclick="openNewTab()" title="Open in new tab">↗️</button>
+            </div>
+        </div>
+
+        <!-- Loader -->
+        <div class="loader-overlay" id="loader">
+            <div class="spinner"></div>
+            <div style="font-weight: 500; letter-spacing: 1px;">Đang khởi tạo môi trường Demo...</div>
+        </div>
+
+        <!-- Iframe Wrapper -->
+        <div class="iframe-wrapper" id="iframeWrapper">
+            <iframe id="mainFrame" class="demo-frame" src="about:blank"></iframe>
+        </div>
+
+    </main>
+
+    <script>
+        let currentUrl = '';
+
+        function loadDemo(daId, url) {
+            // Update UI Active State
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+
+            // Hide Home Screen & Show Header
+            document.getElementById('homeScreen').classList.add('hidden');
+            document.getElementById('frameHeader').classList.add('visible');
+            document.getElementById('iframeWrapper').classList.add('has-header');
+
+            // Set Title
+            const title = event.currentTarget.querySelector('.nav-title').textContent;
+            document.getElementById('currentDaId').textContent = daId;
+            
+            // Set Color based on DA
+            const colors = {
+                'DA1': 'var(--accent-orange)',
+                'DA2': 'var(--accent-purple)',
+                'DA3': 'var(--primary)',
+                'DA4': 'var(--accent-teal)'
+            };
+            document.getElementById('currentDaId').style.background = colors[daId];
+            document.getElementById('currentDaName').textContent = title;
+
+            // Show Loader
+            const loader = document.getElementById('loader');
+            const frame = document.getElementById('mainFrame');
+            loader.classList.add('active');
+            frame.classList.remove('loaded');
+
+            // Load iframe
+            currentUrl = url;
+            frame.src = url;
+
+            // Hide loader after iframe loads
+            frame.onload = function() {
+                setTimeout(() => {
+                    loader.classList.remove('active');
+                    frame.classList.add('loaded');
+                }, 500); // Add a small artificial delay for "wow" factor
+            };
+        }
+
+        function setView(type) {
+            const wrapper = document.getElementById('iframeWrapper');
+            const btnD = document.getElementById('btnDesktop');
+            const btnM = document.getElementById('btnMobile');
+
+            if (type === 'mobile') {
+                wrapper.classList.add('mobile-view');
+                btnM.classList.add('active');
+                btnD.classList.remove('active');
+            } else {
+                wrapper.classList.remove('mobile-view');
+                btnD.classList.add('active');
+                btnM.classList.remove('active');
+            }
+        }
+
+        function openNewTab() {
+            if(currentUrl) {
+                window.open(currentUrl, '_blank');
+            }
+        }
+    </script>
+</body>
+</html>
