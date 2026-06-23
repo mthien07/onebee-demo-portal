@@ -4,8 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hệ sinh thái ONEBEE - Cổng Demo Tổng hợp</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@400;500&display=swap" rel="stylesheet">
     <style>
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -20,32 +18,29 @@
             --accent-purple: #a855f7;
             --accent-orange: #f97316;
             --accent-green: #10b981;
+            --font-main: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
         }
 
         body {
-            font-family: 'Outfit', sans-serif;
+            font-family: var(--font-main);
             background-color: var(--bg-dark);
             color: var(--text-main);
             height: 100vh;
             display: flex;
             overflow: hidden;
-            background-image: 
-                radial-gradient(circle at 15% 50%, rgba(59, 130, 246, 0.1), transparent 25%),
-                radial-gradient(circle at 85% 30%, rgba(168, 85, 247, 0.1), transparent 25%);
+            background-image: linear-gradient(135deg, #030712 0%, #0f172a 100%);
         }
 
         /* Sidebar Navigation */
         .sidebar {
             width: 320px;
-            background: rgba(15, 23, 42, 0.6);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+            background: #0f172a;
             border-right: 1px solid var(--border-glass);
             display: flex;
             flex-direction: column;
             z-index: 10;
-            box-shadow: 5px 0 25px rgba(0,0,0,0.5);
-            transition: all 0.3s ease;
+            box-shadow: 3px 0 14px rgba(0,0,0,0.35);
+            transition: width 0.2s ease, box-shadow 0.2s ease;
         }
 
         .sidebar-header {
@@ -67,7 +62,7 @@
         .subtitle {
             font-size: 13px;
             color: var(--text-sub);
-            font-family: 'Inter', sans-serif;
+            font-family: var(--font-main);
             text-transform: uppercase;
             letter-spacing: 1px;
             font-weight: 500;
@@ -86,10 +81,14 @@
             display: flex;
             align-items: center;
             gap: 16px;
+            width: 100%;
             padding: 16px;
             border-radius: 16px;
             cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            color: inherit;
+            font: inherit;
+            text-align: left;
+            transition: background-color 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
             border: 1px solid transparent;
             background: rgba(255, 255, 255, 0.02);
             position: relative;
@@ -114,7 +113,6 @@
         .nav-item.active {
             background: rgba(255, 255, 255, 0.08);
             border-color: var(--border-glass);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
         }
 
         .nav-item.active::before {
@@ -132,15 +130,13 @@
             background: rgba(0,0,0,0.3);
             border: 1px solid var(--border-glass);
             flex-shrink: 0;
-            box-shadow: inset 0 0 10px rgba(255,255,255,0.05);
-            transition: all 0.3s;
+            transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
         }
 
         .nav-item.active .nav-icon {
             background: var(--active-color, var(--primary));
             border-color: transparent;
             color: #fff;
-            box-shadow: 0 0 20px var(--active-color, var(--primary));
         }
 
         .nav-text {
@@ -157,7 +153,7 @@
         .nav-desc {
             font-size: 12px;
             color: var(--text-sub);
-            font-family: 'Inter', sans-serif;
+            font-family: var(--font-main);
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
@@ -176,7 +172,7 @@
             text-align: center;
             font-size: 12px;
             color: var(--text-sub);
-            font-family: 'Inter', sans-serif;
+            font-family: var(--font-main);
         }
 
         /* Main Content */
@@ -198,7 +194,7 @@
             justify-content: center;
             background: var(--bg-dark);
             z-index: 5;
-            transition: opacity 0.5s;
+            transition: opacity 0.18s ease;
             text-align: center;
             padding: 40px;
         }
@@ -211,13 +207,6 @@
         .home-logo {
             font-size: 80px;
             margin-bottom: 24px;
-            animation: float 6s ease-in-out infinite;
-        }
-
-        @keyframes float {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-20px); }
-            100% { transform: translateY(0px); }
         }
 
         .home-title {
@@ -241,8 +230,7 @@
         .loader-overlay {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(3, 7, 18, 0.8);
-            backdrop-filter: blur(10px);
+            background: rgba(3, 7, 18, 0.92);
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -250,7 +238,7 @@
             z-index: 8;
             opacity: 0;
             pointer-events: none;
-            transition: opacity 0.3s;
+            transition: opacity 0.15s ease;
         }
 
         .loader-overlay.active {
@@ -276,7 +264,7 @@
             height: 100%;
             border: none;
             opacity: 0;
-            transition: opacity 0.5s;
+            transition: opacity 0.18s ease;
         }
 
         .demo-frame.loaded {
@@ -296,7 +284,7 @@
             top: 0; left: 0; width: 100%;
             z-index: 6;
             transform: translateY(-100%);
-            transition: transform 0.3s;
+            transition: transform 0.18s ease;
         }
 
         .frame-header.visible {
@@ -329,7 +317,7 @@
             border-radius: 6px;
             display: flex; align-items: center; justify-content: center;
             cursor: pointer;
-            transition: 0.2s;
+            transition: background-color 0.15s ease, color 0.15s ease;
         }
         .device-btn:hover, .device-btn.active {
             background: rgba(255,255,255,0.15);
@@ -340,7 +328,7 @@
             width: 100%;
             height: 100%;
             padding-top: 0;
-            transition: all 0.3s;
+            transition: width 0.18s ease, height 0.18s ease, margin 0.18s ease, border-radius 0.18s ease;
             margin: 0 auto;
             background: #000;
         }
@@ -357,7 +345,7 @@
             margin-top: 60px;
             border-radius: 40px;
             border: 12px solid #1e293b;
-            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+            box-shadow: 0 14px 28px rgba(0,0,0,0.35);
             overflow: hidden;
             position: relative;
         }
@@ -376,14 +364,12 @@
             border-radius: 0;
         }
 
-        /* 📱 Mobile Responsiveness & Performance Anti-Lag */
+        /* Mobile Responsiveness */
         @media (max-width: 768px) {
             body { flex-direction: column; }
             .sidebar { 
                 width: 100%; height: auto; border-right: none; border-bottom: 1px solid var(--border-glass); 
                 flex-direction: row; flex-wrap: wrap; 
-                backdrop-filter: none; /* Disable expensive blur on mobile */
-                -webkit-backdrop-filter: none;
                 background: var(--bg-panel); 
                 box-shadow: 0 4px 10px rgba(0,0,0,0.3);
             }
@@ -391,7 +377,7 @@
             .logo { font-size: 24px; margin-bottom: 0; }
             .subtitle { font-size: 10px; }
             .nav-list { flex-direction: row; overflow-x: auto; padding: 10px 16px; gap: 12px; width: 100%; flex: none; }
-            .nav-item { padding: 8px 16px; flex-shrink: 0; }
+            .nav-item { width: auto; padding: 8px 16px; flex-shrink: 0; }
             .nav-icon { width: 36px; height: 36px; font-size: 18px; border-radius: 10px; }
             .nav-text { display: none; } /* Hide descriptions to save space */
             .sidebar-footer { display: none; }
@@ -407,9 +393,12 @@
             .iframe-wrapper.mobile-view::after { display: none; }
         }
 
-        /* 🚀 Hardware Acceleration for Animations */
-        .home-logo, .nav-item {
-            will-change: transform;
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation: none !important;
+                transition: none !important;
+                scroll-behavior: auto !important;
+            }
         }
 
 
@@ -426,40 +415,40 @@
 
         <div class="nav-list">
             <!-- DA1 -->
-            <div class="nav-item item-da1" onclick="loadDemo('DA1', 'https://mthien07.github.io/da1-tro-ly-tai-chinh-ai-bo-tui/demo/')">
+            <button class="nav-item item-da1" type="button" onclick="loadDemo(this, 'DA1', 'https://mthien07.github.io/da1-tro-ly-tai-chinh-ai-bo-tui/demo/')">
                 <div class="nav-icon">💰</div>
                 <div class="nav-text">
                     <div class="nav-title">Trợ lý Tài chính AI</div>
                     <div class="nav-desc">Tự động hóa bóc tách hóa đơn, biên lai qua Camera & Zalo Mini App.</div>
                 </div>
-            </div>
+            </button>
 
             <!-- DA2 -->
-            <div class="nav-item item-da2" onclick="loadDemo('DA2', 'https://mthien07.github.io/da2-mo-hinh-quan-tri-hien-dai-cung-ai/demo/')">
+            <button class="nav-item item-da2" type="button" onclick="loadDemo(this, 'DA2', 'https://mthien07.github.io/da2-mo-hinh-quan-tri-hien-dai-cung-ai/demo/')">
                 <div class="nav-icon">🏢</div>
                 <div class="nav-text">
                     <div class="nav-title">Mô hình Quản trị AI</div>
                     <div class="nav-desc">Hệ thống ERP thu nhỏ kết hợp Automation (n8n) và AI Engineering.</div>
                 </div>
-            </div>
+            </button>
 
             <!-- DA3 -->
-            <div class="nav-item item-da3" onclick="loadDemo('DA3', 'https://mthien07.github.io/da3-he-dieu-hanh-va-tu-dong-hoa-open-source/demo/')">
+            <button class="nav-item item-da3" type="button" onclick="loadDemo(this, 'DA3', 'https://mthien07.github.io/da3-he-dieu-hanh-va-tu-dong-hoa-open-source/demo/')">
                 <div class="nav-icon">🐧</div>
                 <div class="nav-text">
                     <div class="nav-title">OneBee OS</div>
                     <div class="nav-desc">Hệ điều hành mã nguồn mở Linux tùy biến cho doanh nghiệp & nhà nước.</div>
                 </div>
-            </div>
+            </button>
 
             <!-- DA4 -->
-            <div class="nav-item item-da4" onclick="loadDemo('DA4', 'https://mthien07.github.io/da4-hermes-agent-cho-hanh-chinh-cong/demo/')">
+            <button class="nav-item item-da4" type="button" onclick="loadDemo(this, 'DA4', 'https://mthien07.github.io/da4-hermes-agent-cho-hanh-chinh-cong/demo/')">
                 <div class="nav-icon">🏛️</div>
                 <div class="nav-text">
                     <div class="nav-title">Hermes Agent</div>
                     <div class="nav-desc">Trợ lý ảo xử lý nghiệp vụ hành chính công tự động bằng luồng Agentic.</div>
                 </div>
-            </div>
+            </button>
         </div>
 
         <div class="sidebar-footer">
@@ -506,18 +495,19 @@
 
         <!-- Iframe Wrapper -->
         <div class="iframe-wrapper" id="iframeWrapper">
-            <iframe id="mainFrame" class="demo-frame" src="about:blank"></iframe>
+            <iframe id="mainFrame" class="demo-frame" src="about:blank" title="OneBee project demo"></iframe>
         </div>
 
     </main>
 
     <script>
         let currentUrl = '';
+        let isFrameLoading = false;
 
-        function loadDemo(daId, url) {
+        function loadDemo(item, daId, url) {
             // Update UI Active State
-            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
-            event.currentTarget.classList.add('active');
+            document.querySelectorAll('.nav-item').forEach(navItem => navItem.classList.remove('active'));
+            item.classList.add('active');
 
             // Hide Home Screen & Show Header
             document.getElementById('homeScreen').classList.add('hidden');
@@ -525,7 +515,7 @@
             document.getElementById('iframeWrapper').classList.add('has-header');
 
             // Set Title
-            const title = event.currentTarget.querySelector('.nav-title').textContent;
+            const title = item.querySelector('.nav-title').textContent;
             document.getElementById('currentDaId').textContent = daId;
             
             // Set Color based on DA
@@ -541,19 +531,25 @@
             // Show Loader
             const loader = document.getElementById('loader');
             const frame = document.getElementById('mainFrame');
-            loader.classList.add('active');
-            frame.classList.remove('loaded');
+
+            if (currentUrl === url && isFrameLoading) {
+                loader.classList.add('active');
+                frame.classList.remove('loaded');
+                return;
+            }
 
             // Load iframe
             currentUrl = url;
+            isFrameLoading = true;
+            loader.classList.add('active');
+            frame.classList.remove('loaded');
             frame.src = url;
 
             // Hide loader after iframe loads
             frame.onload = function() {
-                setTimeout(() => {
-                    loader.classList.remove('active');
-                    frame.classList.add('loaded');
-                }, 500); // Add a small artificial delay for "wow" factor
+                isFrameLoading = false;
+                loader.classList.remove('active');
+                frame.classList.add('loaded');
             };
         }
 
