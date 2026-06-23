@@ -7,6 +7,10 @@
     <style>
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
+        html {
+            height: 100%;
+        }
+
         :root {
             --bg-dark: #030712;
             --bg-panel: #0f172a;
@@ -26,6 +30,7 @@
             background-color: var(--bg-dark);
             color: var(--text-main);
             height: 100vh;
+            height: 100dvh;
             display: flex;
             overflow: hidden;
             background-image: linear-gradient(135deg, #030712 0%, #0f172a 100%);
@@ -181,6 +186,8 @@
             display: flex;
             flex-direction: column;
             position: relative;
+            min-width: 0;
+            min-height: 0;
             background: #000;
         }
 
@@ -224,6 +231,18 @@
             max-width: 600px;
             line-height: 1.6;
             margin-bottom: 40px;
+        }
+
+        .home-actions {
+            display: flex;
+            gap: 16px;
+        }
+
+        .home-pill {
+            background: rgba(255,255,255,0.05);
+            padding: 12px 24px;
+            border-radius: 100px;
+            border: 1px solid var(--border-glass);
         }
 
         /* Loading Overlay */
@@ -327,6 +346,7 @@
         .iframe-wrapper {
             width: 100%;
             height: 100%;
+            min-height: 0;
             padding-top: 0;
             transition: width 0.18s ease, height 0.18s ease, margin 0.18s ease, border-radius 0.18s ease;
             margin: 0 auto;
@@ -366,10 +386,15 @@
 
         /* Mobile Responsiveness */
         @media (max-width: 768px) {
-            body { flex-direction: column; }
+            body {
+                flex-direction: column;
+                height: 100dvh;
+                min-height: 100dvh;
+            }
             .sidebar { 
                 width: 100%; height: auto; border-right: none; border-bottom: 1px solid var(--border-glass); 
                 flex-direction: row; flex-wrap: wrap; 
+                flex: 0 0 auto;
                 background: var(--bg-panel); 
                 box-shadow: 0 4px 10px rgba(0,0,0,0.3);
             }
@@ -381,12 +406,38 @@
             .nav-icon { width: 36px; height: 36px; font-size: 18px; border-radius: 10px; }
             .nav-text { display: none; } /* Hide descriptions to save space */
             .sidebar-footer { display: none; }
+
+            .main-content {
+                flex: 1 1 auto;
+                min-height: 0;
+            }
+
+            .home-screen {
+                justify-content: flex-start;
+                overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
+                padding: 32px 20px calc(32px + env(safe-area-inset-bottom));
+            }
             
             .home-title { font-size: 32px; }
-            .home-desc { font-size: 15px; }
+            .home-desc { font-size: 15px; margin-bottom: 24px; }
+            .home-actions { flex-wrap: wrap; justify-content: center; }
+            .home-pill { padding: 10px 16px; }
             
             .frame-header { padding: 0 16px; }
             .device-toggles { display: none; } /* Hide device frame toggles on mobile */
+
+            .iframe-wrapper {
+                height: 100%;
+                min-height: 0;
+                overflow: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .demo-frame {
+                display: block;
+                min-height: 100%;
+            }
             
             /* If mobile view is active, force it to 100% anyway */
             .iframe-wrapper.mobile-view { width: 100%; height: 100%; margin-top: 0; border: none; border-radius: 0; box-shadow: none; }
@@ -464,11 +515,11 @@
             <div class="home-logo">🐝</div>
             <h1 class="home-title">Hệ Sinh Thái ONEBEE</h1>
             <p class="home-desc">Khám phá 4 giải pháp công nghệ đột phá tham gia Hội thi Khởi nghiệp Đổi mới Sáng tạo tỉnh Tây Ninh 2026. Vui lòng chọn một dự án bên trái để trải nghiệm Demo tương tác.</p>
-            <div style="display:flex; gap: 16px;">
-                <div style="background: rgba(255,255,255,0.05); padding: 12px 24px; border-radius: 100px; border: 1px solid var(--border-glass);">
+            <div class="home-actions">
+                <div class="home-pill">
                     🚀 Sẵn sàng triển khai
                 </div>
-                <div style="background: rgba(255,255,255,0.05); padding: 12px 24px; border-radius: 100px; border: 1px solid var(--border-glass);">
+                <div class="home-pill">
                     🔒 Bảo mật dữ liệu Local
                 </div>
             </div>
@@ -495,7 +546,7 @@
 
         <!-- Iframe Wrapper -->
         <div class="iframe-wrapper" id="iframeWrapper">
-            <iframe id="mainFrame" class="demo-frame" src="about:blank" title="OneBee project demo"></iframe>
+            <iframe id="mainFrame" class="demo-frame" src="about:blank" title="OneBee project demo" scrolling="yes"></iframe>
         </div>
 
     </main>
